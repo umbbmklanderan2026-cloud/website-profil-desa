@@ -1,10 +1,11 @@
 'use client'
 
 import React, { useState, useEffect } from 'react'
-import { motion } from 'framer-motion'
+import { motion, useMotionValue, useMotionTemplate, useScroll, useTransform } from 'framer-motion'
 import { createClient } from 'next-sanity'
 import imageUrlBuilder from '@sanity/image-url'
 
+// 1. Konfigurasi Sanity Client
 const client = createClient({
   projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID,
   dataset: process.env.NEXT_PUBLIC_SANITY_DATASET,
@@ -17,37 +18,86 @@ function urlFor(source) {
   return builder.image(source)
 }
 
-// 1. Definisi Variasi Animasi untuk Kontainer Grid (Stagger Effect)
+// Definisi Variasi Animasi untuk Kontainer Grid (Stagger Effect)
 const containerVariants = {
   hidden: { opacity: 0 },
   show: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.15 // Membuat kartu muncul bergantian satu per satu dengan jeda 0.15 detik
+      staggerChildren: 0.1
     }
   }
 }
 
-// 2. Definisi Variasi Animasi untuk Masing-masing Kartu Perangkat
+// Definisi Variasi Animasi untuk Masing-masing Kartu Perangkat
 const cardVariants = {
   hidden: { 
     opacity: 0, 
-    y: 40 // Posisi awal agak ke bawah
+    y: 30,
+    scale: 0.95
   },
   show: { 
     opacity: 1, 
-    y: 0, // Naik ke posisi asli
+    y: 0, 
+    scale: 1,
     transition: { 
       type: 'spring', 
-      stiffness: 60, 
-      damping: 15 
+      stiffness: 70, 
+      damping: 14 
     } 
   }
 }
 
 export default function AparaturPage() {
   const [aparatur, setAparatur] = useState([])
+  const [isMobile, setIsMobile] = useState(false)
+  const [hoveredCard, setHoveredCard] = useState(null)
 
+  // ==================== OPSI 1: MOUSE MOVE SPOTLIGHT LIGHTS ====================
+  const mouseX = useMotionValue(0)
+  const mouseY = useMotionValue(0)
+
+  function handleMouseMove({ currentTarget, clientX, clientY }) {
+    const { left, top } = currentTarget.getBoundingClientRect()
+    mouseX.set(clientX - left)
+    mouseY.set(clientY - top)
+  }
+
+  // ==================== OPSI 2: SCROLL-LINKED GRADIENT PROGRESS ====================
+  const { scrollYProgress } = useScroll()
+  
+  const glowColorCenter = useTransform(
+    scrollYProgress,
+    [0, 0.5, 1],
+    ['rgba(187, 251, 255, 0.45)', 'rgba(84, 9, 218, 0.25)', 'rgba(84, 9, 218, 0.45)']
+  )
+
+  const glowColorOuter = useTransform(
+    scrollYProgress,
+    [0, 1],
+    ['rgba(84, 9, 218, 0.05)', 'rgba(187, 251, 255, 0.02)']
+  )
+
+  const dynamicBackground = useMotionTemplate`
+    radial-gradient(
+      650px circle at ${mouseX}px ${mouseY}px,
+      ${glowColorCenter} 0%,
+      ${glowColorOuter} 45%,
+      rgba(255, 255, 255, 1) 85%
+    )
+  `
+
+  // Deteksi Ukuran Layar HP secara Realtime
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768)
+    }
+    handleResize()
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
+
+  // Mengambil data aparatur dari Sanity
   useEffect(() => {
     async function fetchAparatur() {
       try {
@@ -63,121 +113,184 @@ export default function AparaturPage() {
   return (
     <div style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", background: '#ffffff', minHeight: '100vh', color: '#222222', overflowX: 'hidden' }}>
       
-      {/* NAVBAR GLASSMORPHIC */}
+      {/* ==================== 1. NAVBAR RESPONSIF GLASSMORPHIC WINDOWS ==================== */}
       <nav style={{ 
-        background: 'rgba(187, 251, 255, 0.75)', 
+        background: 'rgba(255, 255, 255, 0.15)', 
         backdropFilter: 'blur(12px)', 
         WebkitBackdropFilter: 'blur(12px)',
-        padding: '15px 5%', 
-        position: 'sticky', 
+        padding: isMobile ? '16px 4%' : '15px 5%', 
+        position: 'absolute', 
+        width: '100%',
         top: '0', 
+        left: '0',
+        boxSizing: 'border-box',
         zIndex: '1000', 
         display: 'flex', 
+        flexDirection: isMobile ? 'column' : 'row',
         justifyContent: 'space-between', 
         alignItems: 'center', 
-        borderBottom: '2px solid rgba(84, 9, 218, 0.4)',
-        boxShadow: '0 4px 20px rgba(84, 9, 218, 0.03)'
+        gap: isMobile ? '10px' : '15px',
+        borderBottom: '1px solid rgba(255, 255, 255, 0.2)',
+        boxShadow: '0 8px 32px 0 rgba(0, 0, 0, 0.1)'
       }}>
-        <div style={{ fontWeight: '900', fontSize: '1.2rem', color: '#5409DA' }}>🏡 DESA KLANDERAN</div>
+        <div style={{ fontWeight: '900', fontSize: isMobile ? '1.1rem' : '1.3rem', color: '#ffffff', letterSpacing: '0.5px', textShadow: '2px 2px 8px rgba(0,0,0,0.4)' }}>
+          DESA KLANDERAN
+        </div>
         <motion.a 
           href="/" 
-          whileHover={{ scale: 1.05 }}
+          whileHover={{ scale: 1.05, boxShadow: '0 5px 15px rgba(187,251,255,0.4)' }}
           whileTap={{ scale: 0.95 }}
-          style={{ textDecoration: 'none', color: '#5409DA', fontSize: '0.9rem', fontWeight: '800', background: '#ffffff', padding: '8px 16px', borderRadius: '20px', boxShadow: '0 2px 8px rgba(84, 9, 218, 0.15)', border: '1px solid rgba(84, 9, 218, 0.2)', transition: 'all 0.2s' }}
+          style={{ 
+            textDecoration: 'none', 
+            color: '#ffffff', 
+            fontSize: '0.85rem', 
+            fontWeight: '800', 
+            background: 'rgba(255, 255, 255, 0.2)', 
+            padding: '8px 18px', 
+            borderRadius: '20px', 
+            border: '1px solid rgba(255, 255, 255, 0.3)', 
+            backdropFilter: 'blur(4px)',
+            transition: 'all 0.2s' 
+          }}
         >
           ← Kembali ke Beranda
         </motion.a>
       </nav>
 
-      {/* BANNER UTAMA DENGAN ANIMASI FADE DOWN */}
-      <div style={{ background: 'linear-gradient(135deg, #BBFBFF 0%, #ffffff 100%)', padding: '60px 20px', textAlign: 'center', borderBottom: '1px solid #BBFBFF' }}>
+      {/* ==================== 2. BANNER UTAMA GLASSMORPHIC ==================== */}
+      <div style={{ 
+        background: 'linear-gradient(135deg, #110326 0%, #3e0ba3 50%, #0d021f 100%)', 
+        padding: isMobile ? '120px 20px 60px 20px' : '140px 20px 80px 20px', 
+        textAlign: 'center', 
+        borderBottom: '3px solid #5409DA',
+        boxShadow: '0 15px 35px rgba(0,0,0,0.15)'
+      }}>
         <motion.h1 
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          style={{ color: '#5409DA', fontSize: 'clamp(2rem, 4vw, 2.5rem)', fontWeight: '900', margin: '0 0 10px 0' }}
+          style={{ color: '#a6f7ff', fontSize: 'clamp(1.8rem, 4vw, 2.8rem)', fontWeight: '900', margin: '0 0 15px 0', textShadow: '0 2px 15px rgba(166,247,255,0.2)' }}
         >
-          👥 Struktur Organisasi & Perangkat Desa
+          Perangkat & Pamong Desa
         </motion.h1>
         <motion.p 
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.6, delay: 0.2 }}
-          style={{ color: '#444444', fontSize: 'clamp(0.95rem, 2vw, 1.05rem)', fontWeight: '500', maxWidth: '700px', margin: '0 auto', lineHeight: '1.5' }}
+          style={{ color: '#ffffff', fontSize: 'clamp(0.9rem, 2vw, 1.1rem)', fontWeight: '600', maxWidth: '750px', margin: '0 auto', lineHeight: '1.6', opacity: '0.9' }}
         >
-          Aparatur Pemerintah Desa Klanderan yang siap melayani kebutuhan administrasi dan transformasi digital warga dengan prima.
+          Aparatur Pemerintah Desa Klanderan yang siap melayani kebutuhan administrasi publik dan mengawal akselerasi transformasi digital warga secara prima.
         </motion.p>
       </div>
 
-      {/* AREA GRID KARTU PERANGKAT DESA YANG ANIMATIF */}
-      <div style={{ maxWidth: '1200px', margin: '50px auto', padding: '0 5%', boxSizing: 'border-box' }}>
-        {aparatur.length === 0 ? (
-          <p style={{ color: '#888888', fontStyle: 'italic', textAlign: 'center', marginTop: '40px' }}>Menghubungkan ke database Sanity...</p>
-        ) : (
-          <motion.div 
-            variants={containerVariants}
-            initial="hidden"
-            whileInView="show" // Memicu animasi ketika area grid masuk ke layar saat di-scroll
-            viewport={{ once: true, margin: "-100px" }} // Animasi hanya berjalan 1 kali agar tidak melelahkan mata pengunjung
-            style={{ 
-              display: 'grid', 
-              gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', 
-              gap: '30px' 
-            }}
-          >
-            {aparatur.map((p) => (
-              <motion.div 
-                key={p._id}
-                variants={cardVariants} // Mengikuti logika fade-in stagger dari parent
-                whileHover={{ 
-                  y: -8, 
-                  scale: 1.03,
-                  boxShadow: '0 12px 30px rgba(84, 9, 218, 0.08)',
-                  borderColor: '#5409DA'
-                }} 
-                style={{ 
-                  border: '2px solid #BBFBFF', 
-                  borderRadius: '24px', 
-                  padding: '35px 20px', 
-                  textAlign: 'center', 
-                  background: '#ffffff', 
-                  boxShadow: '0 4px 15px rgba(84,9,218,0.01)',
-                  transition: 'border-color 0.3s ease, box-shadow 0.3s ease'
-                }}
-              >
-                {/* Pembungkus Foto Lingkaran */}
-                <div style={{ 
-                  width: '120px', 
-                  height: '120px', 
-                  margin: '0 auto 20px auto', 
-                  borderRadius: '50%', 
-                  overflow: 'hidden', 
-                  border: '4px solid #BBFBFF', 
-                  boxShadow: '0 4px 12px rgba(84,9,218,0.06)' 
-                }}>
-                  {p.foto ? (
-                    <img src={urlFor(p.foto).url()} alt={p.nama} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                  ) : (
-                    <div style={{ width: '100%', height: '100%', background: '#f5f5f5', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#aaa', fontSize: '2.5rem' }}>👤</div>
-                  )}
+      {/* ==================== 3. KONTEN GRID UTAMA DENGAN DUAL-INTERACTIVE BACKGROUND ==================== */}
+      <motion.div 
+        onMouseMove={handleMouseMove}
+        style={{ 
+          background: dynamicBackground,
+          width: '100%', 
+          padding: '60px 0',
+          position: 'relative',
+          overflow: 'hidden',
+          transition: 'background 0.1s ease-out'
+        }}
+      >
+        {/* Dekorasi lingkaran blur halus di latar belakang */}
+        <div style={{ position: 'absolute', top: '10%', left: '-15%', width: '300px', height: '300px', background: 'rgba(187, 251, 255, 0.3)', filter: 'blur(90px)', borderRadius: '50%', zIndex: 0 }} />
+        <div style={{ position: 'absolute', bottom: '15%', right: '-15%', width: '350px', height: '350px', background: 'rgba(84, 9, 218, 0.05)', filter: 'blur(100px)', borderRadius: '50%', zIndex: 0 }} />
+
+        <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 5%', boxSizing: 'border-box', position: 'relative', zIndex: 1 }}>
+          
+          {aparatur.length === 0 ? (
+            <p style={{ color: '#5409DA', fontStyle: 'italic', textAlign: 'center', marginTop: '40px', fontWeight: '700' }}>
+              Menghubungkan ke basis data Sanity CMS...
+            </p>
+          ) : (
+            <motion.div 
+              variants={containerVariants}
+              initial="hidden"
+              whileInView="show"
+              viewport={{ once: true, margin: "-50px" }}
+              style={{ 
+                display: 'grid', 
+                gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fill, minmax(240px, 1fr))', 
+                gap: '35px' 
+              }}
+            >
+              {aparatur.map((p) => (
+                /* BUNGKUS KARTU: TINGKAT KETEBALAN BORDER 3PX & LIGHTS BERPUTAR INTERAKTIF */
+                <div 
+                  key={p._id}
+                  onMouseEnter={() => setHoveredCard(p._id)}
+                  onMouseLeave={() => setHoveredCard(null)}
+                  style={{ position: 'relative', borderRadius: '28px', padding: '3px', overflow: 'hidden', boxShadow: '0 15px 35px rgba(84, 9, 218, 0.04)' }}
+                >
+                  {/* Kilatan lampu gradasi sirkuit melingkar */}
+                  <motion.div 
+                    animate={{ rotate: 360 }} 
+                    transition={{ duration: hoveredCard === p._id ? 3 : 12, ease: 'linear', repeat: Infinity }} 
+                    style={{ position: 'absolute', top: '-100%', left: '-100%', width: '300%', height: '300%', background: 'conic-gradient(from 0deg, #BBFBFF, #5409DA, #BBFBFF, #5409DA, #BBFBFF)', zIndex: 0 }} 
+                  />
+
+                  {/* AREA ISI KONTEN KARTU KELUARGA APARATUR */}
+                  <div style={{ position: 'relative', zIndex: 1, padding: '40px 20px', background: '#ffffff', borderRadius: '25px', textAlign: 'center', height: '100%', boxSizing: 'border-box' }}>
+                    
+                    {/* Pembungkus Foto Lingkaran Berbingkai Ganda */}
+                    <div style={{ 
+                      width: '130px', 
+                      height: '130px', 
+                      margin: '0 auto 22px auto', 
+                      borderRadius: '50%', 
+                      overflow: 'hidden', 
+                      border: '4px solid #BBFBFF', 
+                      boxShadow: '0 6px 16px rgba(84, 9, 218, 0.08)' 
+                    }}>
+                      {p.foto ? (
+                        <img src={urlFor(p.foto).url()} alt={p.nama} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                      ) : (
+                        <div style={{ width: '100%', height: '100%', background: '#f8f6ff', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#5409DA', opacity: 0.4, fontSize: '3rem' }}>👤</div>
+                      )}
+                    </div>
+
+                    {/* Teks Identitas Pamong */}
+                    <h3 style={{ margin: '0 0 8px 0', fontSize: '1.25rem', color: '#1a0640', fontWeight: '900', lineHeight: '1.3' }}>
+                      {p.nama}
+                    </h3>
+                    <div style={{ display: 'inline-block', background: 'rgba(84, 9, 218, 0.06)', padding: '4px 14px', borderRadius: '12px' }}>
+                      <p style={{ margin: '0', fontSize: '0.8rem', color: '#5409DA', fontWeight: '900', textTransform: 'uppercase', letterSpacing: '0.8px' }}>
+                        {p.jabatan}
+                      </p>
+                    </div>
+
+                  </div>
                 </div>
+              ))}
+            </motion.div>
+          )}
+        </div>
+      </motion.div>
 
-                {/* Teks Nama & Jabatan */}
-                <h3 style={{ margin: '0 0 6px 0', fontSize: '1.2rem', color: '#111111', fontWeight: '800', lineHeight: '1.3' }}>
-                  {p.nama}
-                </h3>
-                <p style={{ margin: '0', fontSize: '0.85rem', color: '#5409DA', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.8px' }}>
-                  {p.jabatan}
-                </p>
-              </motion.div>
-            ))}
-          </motion.div>
-        )}
-      </div>
-
-      {/* FOOTER MINI */}
-      <footer style={{ background: 'linear-gradient(to bottom, #ffffff 0%, #f6f8fc 100%)', color: '#888888', padding: '40px 20px', textAlign: 'center', borderTop: '1px solid #eee', marginTop: '8px' }}>
-        <p style={{ margin: '0', fontSize: '0.85rem', fontWeight: '600' }}>&copy; 2026 Tim KKN Universitas Negeri Malang. All Rights Reserved.</p>
+      {/* ==================== 4. FOOTER SOLID DENGAN GRADASI TEBAL MATCHING ==================== */}
+      <footer style={{ 
+        background: 'linear-gradient(135deg, #a6f7ff 0%, #3e0ba3 45%, #0d021f 100%)', 
+        padding: '50px 5% 40px 5%', 
+        borderTop: '4px solid #5409DA',
+        textAlign: 'center',
+        position: 'relative',
+        zIndex: 2
+      }}>
+        <div style={{ maxWidth: '1200px', margin: '0 auto', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '15px' }}>
+          <h3 style={{ margin: '0', color: '#a6f7ff', fontSize: '1.2rem', fontWeight: '900', letterSpacing: '0.5px' }}>
+            PEMERINTAH DESA KLANDERAN
+          </h3>
+          <p style={{ margin: '0', fontSize: '0.85rem', color: '#ffffff', fontWeight: '600', opacity: 0.8, maxWidth: '600px', lineHeight: '1.5' }}>
+            Sistem Informasi Pelayanan Struktural Pamong & Administrasi Mandiri Terpadu. Kec. Plosoklaten, Kabupaten Kediri, Jawa Timur.
+          </p>
+          <div style={{ width: '80px', height: '1px', background: 'rgba(255,255,255,0.2)', margin: '10px 0' }} />
+          <p style={{ margin: '0', fontSize: '0.78rem', color: '#ffffff', fontWeight: '750', opacity: 0.7 }}>
+            {"© 2026 Tim KKN Universitas Negeri Malang. Seluruh Hak Cipta Dilindungi."}
+          </p>
+        </div>
       </footer>
 
     </div>
