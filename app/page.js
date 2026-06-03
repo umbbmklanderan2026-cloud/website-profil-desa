@@ -424,7 +424,8 @@ export default function Home() {
               </div>
 
               {/* CARD 4: LAYANAN */}
-              <div 
+            {/* CARD 4: LAYANAN - SEKARANG LANGSUNG TERHUBUNG KE INSTAGRAM */}
+            <div 
                 onMouseEnter={() => setHoveredCard('c4')}
                 onMouseLeave={() => setHoveredCard(null)}
                 style={{ position: 'relative', borderRadius: '24px', padding: '3px', overflow: 'hidden', boxShadow: '0 12px 30px rgba(27, 203, 169, 0.05)' }}
@@ -436,12 +437,31 @@ export default function Home() {
                     <h3 style={{ color: '#1a0640', fontSize: '1.15rem', fontWeight: '800', margin: '0 0 8px 0' }}>Layanan Publik</h3>
                     <p style={{ color: '#666666', fontSize: '0.85rem', margin: '0 0 20px 0', lineHeight: '1.5', fontWeight: '500' }}>Panduan administratif pengurusan surat pengantar kependudukan, KK, KTP, dan blanko mandiri digital.</p>
                   </div>
-                  <button 
-                    onClick={() => alert('Loket pengajuan surat digital sedang diintegrasikan oleh Admin IT Desa Klanderan.')} 
-                    style={{ display: 'block', width: '100%', border: 'none', background: '#1bcba9', color: '#ffffff', padding: '11px 0', borderRadius: '12px', fontWeight: '800', fontSize: '0.85rem', cursor: 'pointer' }}
+                  
+                  {/* PERBAIKAN: Mengubah <button> lama menjadi <motion.a> yang langsung mengarah ke Instagram */}
+                  <motion.a 
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    href="https://www.instagram.com/um.bbmklanderan?igsh=Z2VmZGNnbmozd3px" // Sesuai dengan akun Instagram yang Anda gunakan
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{ 
+                      display: 'block', 
+                      textAlign: 'center',
+                      width: '100%', 
+                      textDecoration: 'none',
+                      background: '#1bcba9', 
+                      color: '#ffffff', 
+                      padding: '11px 0', 
+                      borderRadius: '12px', 
+                      fontWeight: '800', 
+                      fontSize: '0.85rem', 
+                      cursor: 'pointer',
+                      boxSizing: 'border-box'
+                    }}
                   >
                     Ajukan Surat →
-                  </button>
+                  </motion.a>
                 </div>
               </div>
 
@@ -474,15 +494,23 @@ export default function Home() {
               Pusat pelayanan administrasi publik dan keterbukaan informasi digital terintegrasi untuk mewujudkan Klanderan yang mandiri dan unggul.
             </p>
             <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
-              {['🌐 Web', '📸 Instagram', '📞 WA', '✉️ Email'].map((soc, i) => (
+              {[
+                { name: '🎵 TikTok', url: 'https://www.tiktok.com/@um.bbmklanderan2026?_r=1&_t=ZS-96uANw5v442' },
+                { name: '📸 Instagram', url: 'https://www.instagram.com/um.bbmklanderan?igsh=Z2VmZGNnbmozd3px' }, 
+                { name: '📞 WA', url: 'https://wa.me/082131890757' }, 
+                { name: '✉️ Email', url: 'mailto:umbbmklanderan2026@gmail.com' }
+              ].map((soc, i) => (
                 <motion.a 
                   key={i} 
                   whileHover={{ scale: 1.1, background: '#ffffff', color: '#3e0ba3', boxShadow: '0 8px 20px rgba(166,247,255,0.4)', borderColor: '#ffffff' }}
                   whileTap={{ scale: 0.95 }}
-                  href="#" 
+                  href={soc.url}
+                  target={soc.url.startsWith('http') ? '_blank' : '_self'}
+                  rel="noopener noreferrer"
                   style={{ background: 'rgba(255, 255, 255, 0.15)', color: '#ffffff', textDecoration: 'none', padding: '8px 14px', borderRadius: '10px', fontSize: '0.8rem', fontWeight: '800', border: '2px solid rgba(255,255,255,0.3)', transition: 'background 0.2s, color 0.2s, border-color 0.2s' }}
                 >
-                  {soc}
+                  {/* PERBAIKAN: Tulis {soc.name}, jangan cuma {soc} */}
+                  {soc.name}
                 </motion.a>
               ))}
             </div>
@@ -492,8 +520,8 @@ export default function Home() {
           <div>
             <h4 style={{ margin: '0 0 15px 0', color: '#a6f7ff', fontSize: '1.4rem', fontWeight: '800', borderLeft: '4px solid #ffffff', paddingLeft: '10px' }}> Kontak Resmi</h4>
             <p style={{ margin: '0 0 8px 0', fontSize: '0.88rem', color: '#ffffff', fontWeight: '600' }}>🏢 Balai Desa Klanderan, Kec. Plosoklaten, Kediri.</p>
-            <p style={{ margin: '0 0 8px 0', fontSize: '0.88rem', color: '#ffffff', fontWeight: '600' }}>📞 +62 812-XXXX-XXXX</p>
-            <p style={{ margin: '0', fontSize: '0.88rem', color: '#ffffff', fontWeight: '600' }}>✉️ pemdes@desaklanderan.id</p>
+            <p style={{ margin: '0 0 8px 0', fontSize: '0.88rem', color: '#ffffff', fontWeight: '600' }}>📞 +62 812-1234-5678</p>
+            <p style={{ margin: '0', fontSize: '0.88rem', color: '#ffffff', fontWeight: '600' }}>✉️ umbbmklanderan2026@gmail.com</p>
           </div>
 
           {/* PETA LOKASI DIGITAL GOOGLE MAPS */}
