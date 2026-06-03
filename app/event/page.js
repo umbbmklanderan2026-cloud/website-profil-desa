@@ -92,7 +92,10 @@ export default function EventPage() {
   useEffect(() => {
     async function fetchEvents() {
       try {
-        const data = await client.fetch(`*[_type == "event"] | order(waktuPelaksanaan asc)`)
+        // PERBAIKAN: Menambahkan kondisi waktuPelaksanaan >= now()
+        const data = await client.fetch(
+          `*[_type == "event" && waktuPelaksanaan >= now()] | order(waktuPelaksanaan asc)`
+        )
         setEvents(data)
       } catch (error) {
         console.error("Gagal mengambil data event:", error)

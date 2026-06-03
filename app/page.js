@@ -114,7 +114,7 @@ export default function Home() {
     { name: 'Profil', link: '#profil' },
     { name: 'Struktur Organisasi', link: '/aparatur' },
     { name: 'Event', link: '/event' },
-    { name: 'Potensi', link: '/potensi' }, 
+    { name: 'Potensi Desa', link: '/potensi' }, 
     { name: 'Kontak', link: '#kontak' }
   ]
 
@@ -416,7 +416,7 @@ export default function Home() {
                 <div style={{ position: 'relative', zIndex: 1, padding: '30px 22px', background: '#ffffff', borderRadius: '21px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', height: '100%', boxSizing: 'border-box' }}>
                   <div>
                     <div style={{ width: '50px', height: '50px', background: '#eafaf1', borderRadius: '16px', display: 'flex', justifyContent: 'center', alignItems: 'center', fontSize: '1.6rem', marginBottom: '15px' }}>🌾</div>
-                    <h3 style={{ color: '#1a0640', fontSize: '1.15rem', fontWeight: '800', margin: '0 0 8px 0' }}>Potensi Sektor</h3>
+                    <h3 style={{ color: '#1a0640', fontSize: '1.15rem', fontWeight: '800', margin: '0 0 8px 0' }}>Potensi Desa</h3>
                     <p style={{ color: '#666666', fontSize: '0.85rem', margin: '0 0 20px 0', lineHeight: '1.5', fontWeight: '500' }}>Eksplorasi mendalam sub-sektor unggulan desa: Wisata Alam, Pertanian Makro, dan Peternakan Modern.</p>
                   </div>
                   <a href="/potensi" style={{ display: 'block', textAlign: 'center', background: '#5409DA', color: '#ffffff', textDecoration: 'none', padding: '10px 0', borderRadius: '12px', fontWeight: '800', fontSize: '0.85rem' }}>Buka Potensi →</a>
