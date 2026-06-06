@@ -63,19 +63,19 @@ export default function AparaturPage() {
     mouseY.set(clientY - top)
   }
 
-  // ==================== OPSI 2: SCROLL-LINKED GRADIENT PROGRESS ====================
+  // ==================== OPSI 2: SCROLL-LINKED GRADIENT PROGRESS (TEMA HIJAU) ====================
   const { scrollYProgress } = useScroll()
   
   const glowColorCenter = useTransform(
     scrollYProgress,
     [0, 0.5, 1],
-    ['rgba(187, 251, 255, 0.45)', 'rgba(84, 9, 218, 0.25)', 'rgba(84, 9, 218, 0.45)']
+    ['rgba(0, 255, 163, 0.35)', 'rgba(10, 58, 47, 0.5)', 'rgba(3, 20, 16, 0.6)']
   )
 
   const glowColorOuter = useTransform(
     scrollYProgress,
     [0, 1],
-    ['rgba(84, 9, 218, 0.05)', 'rgba(187, 251, 255, 0.02)']
+    ['rgba(10, 58, 47, 0.15)', 'rgba(230, 251, 247, 0.05)']
   )
 
   const dynamicBackground = useMotionTemplate`
@@ -83,7 +83,7 @@ export default function AparaturPage() {
       650px circle at ${mouseX}px ${mouseY}px,
       ${glowColorCenter} 0%,
       ${glowColorOuter} 45%,
-      rgba(255, 255, 255, 1) 85%
+      rgba(240, 253, 244, 1) 85%
     )
   `
 
@@ -138,7 +138,7 @@ export default function AparaturPage() {
         </div>
         <motion.a 
           href="/" 
-          whileHover={{ scale: 1.05, boxShadow: '0 5px 15px rgba(187,251,255,0.4)' }}
+          whileHover={{ scale: 1.05, boxShadow: '0 5px 15px rgba(0,255,163,0.4)' }}
           whileTap={{ scale: 0.95 }}
           style={{ 
             textDecoration: 'none', 
@@ -159,17 +159,17 @@ export default function AparaturPage() {
 
       {/* ==================== 2. BANNER UTAMA GLASSMORPHIC ==================== */}
       <div style={{ 
-        background: 'linear-gradient(135deg, #110326 0%, #3e0ba3 50%, #0d021f 100%)', 
+        background: 'linear-gradient(135deg, #05201A 0%, #0A3A2F 50%, #031410 100%)', 
         padding: isMobile ? '120px 20px 60px 20px' : '140px 20px 80px 20px', 
         textAlign: 'center', 
-        borderBottom: '3px solid #5409DA',
+        borderBottom: '3px solid #00FFA3',
         boxShadow: '0 15px 35px rgba(0,0,0,0.15)'
       }}>
         <motion.h1 
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          style={{ color: '#a6f7ff', fontSize: 'clamp(1.8rem, 4vw, 2.8rem)', fontWeight: '900', margin: '0 0 15px 0', textShadow: '0 2px 15px rgba(166,247,255,0.2)' }}
+          style={{ color: '#00FFA3', fontSize: 'clamp(1.8rem, 4vw, 2.8rem)', fontWeight: '900', margin: '0 0 15px 0', textShadow: '0 2px 15px rgba(0,255,163,0.2)' }}
         >
           Perangkat & Pamong Desa
         </motion.h1>
@@ -196,13 +196,13 @@ export default function AparaturPage() {
         }}
       >
         {/* Dekorasi lingkaran blur halus di latar belakang */}
-        <div style={{ position: 'absolute', top: '10%', left: '-15%', width: '300px', height: '300px', background: 'rgba(187, 251, 255, 0.3)', filter: 'blur(90px)', borderRadius: '50%', zIndex: 0 }} />
-        <div style={{ position: 'absolute', bottom: '15%', right: '-15%', width: '350px', height: '350px', background: 'rgba(84, 9, 218, 0.05)', filter: 'blur(100px)', borderRadius: '50%', zIndex: 0 }} />
+        <div style={{ position: 'absolute', top: '10%', left: '-15%', width: '300px', height: '300px', background: 'rgba(0, 255, 163, 0.2)', filter: 'blur(90px)', borderRadius: '50%', zIndex: 0 }} />
+        <div style={{ position: 'absolute', bottom: '15%', right: '-15%', width: '350px', height: '350px', background: 'rgba(10, 58, 47, 0.1)', filter: 'blur(100px)', borderRadius: '50%', zIndex: 0 }} />
 
         <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 5%', boxSizing: 'border-box', position: 'relative', zIndex: 1 }}>
           
           {aparatur.length === 0 ? (
-            <p style={{ color: '#5409DA', fontStyle: 'italic', textAlign: 'center', marginTop: '40px', fontWeight: '700' }}>
+            <p style={{ color: '#0A3A2F', fontStyle: 'italic', textAlign: 'center', marginTop: '40px', fontWeight: '700' }}>
               Menghubungkan ke basis data Sanity CMS...
             </p>
           ) : (
@@ -219,17 +219,18 @@ export default function AparaturPage() {
             >
               {aparatur.map((p) => (
                 /* BUNGKUS KARTU: TINGKAT KETEBALAN BORDER 3PX & LIGHTS BERPUTAR INTERAKTIF */
-                <div 
+                <motion.div 
                   key={p._id}
+                  variants={cardVariants}
                   onMouseEnter={() => setHoveredCard(p._id)}
                   onMouseLeave={() => setHoveredCard(null)}
-                  style={{ position: 'relative', borderRadius: '28px', padding: '3px', overflow: 'hidden', boxShadow: '0 15px 35px rgba(84, 9, 218, 0.04)' }}
+                  style={{ position: 'relative', borderRadius: '28px', padding: '3px', overflow: 'hidden', boxShadow: '0 15px 35px rgba(10, 58, 47, 0.08)' }}
                 >
                   {/* Kilatan lampu gradasi sirkuit melingkar */}
                   <motion.div 
                     animate={{ rotate: 360 }} 
                     transition={{ duration: hoveredCard === p._id ? 3 : 12, ease: 'linear', repeat: Infinity }} 
-                    style={{ position: 'absolute', top: '-100%', left: '-100%', width: '300%', height: '300%', background: 'conic-gradient(from 0deg, #BBFBFF, #5409DA, #BBFBFF, #5409DA, #BBFBFF)', zIndex: 0 }} 
+                    style={{ position: 'absolute', top: '-100%', left: '-100%', width: '300%', height: '300%', background: 'conic-gradient(from 0deg, #00FFA3, #0A3A2F, #00FFA3, #0A3A2F, #00FFA3)', zIndex: 0 }} 
                   />
 
                   {/* AREA ISI KONTEN KARTU KELUARGA APARATUR */}
@@ -242,28 +243,28 @@ export default function AparaturPage() {
                       margin: '0 auto 22px auto', 
                       borderRadius: '50%', 
                       overflow: 'hidden', 
-                      border: '4px solid #BBFBFF', 
-                      boxShadow: '0 6px 16px rgba(84, 9, 218, 0.08)' 
+                      border: '4px solid #00FFA3', 
+                      boxShadow: '0 6px 16px rgba(10, 58, 47, 0.15)' 
                     }}>
                       {p.foto ? (
                         <img src={urlFor(p.foto).url()} alt={p.nama} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                       ) : (
-                        <div style={{ width: '100%', height: '100%', background: '#f8f6ff', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#5409DA', opacity: 0.4, fontSize: '3rem' }}>👤</div>
+                        <div style={{ width: '100%', height: '100%', background: '#e6fbf7', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#0A3A2F', opacity: 0.6, fontSize: '3rem' }}>👤</div>
                       )}
                     </div>
 
                     {/* Teks Identitas Pamong */}
-                    <h3 style={{ margin: '0 0 8px 0', fontSize: '1.25rem', color: '#1a0640', fontWeight: '900', lineHeight: '1.3' }}>
+                    <h3 style={{ margin: '0 0 8px 0', fontSize: '1.25rem', color: '#0a241e', fontWeight: '900', lineHeight: '1.3' }}>
                       {p.nama}
                     </h3>
-                    <div style={{ display: 'inline-block', background: 'rgba(84, 9, 218, 0.06)', padding: '4px 14px', borderRadius: '12px' }}>
-                      <p style={{ margin: '0', fontSize: '0.8rem', color: '#5409DA', fontWeight: '900', textTransform: 'uppercase', letterSpacing: '0.8px' }}>
+                    <div style={{ display: 'inline-block', background: 'rgba(10, 58, 47, 0.08)', padding: '4px 14px', borderRadius: '12px' }}>
+                      <p style={{ margin: '0', fontSize: '0.8rem', color: '#0A3A2F', fontWeight: '900', textTransform: 'uppercase', letterSpacing: '0.8px' }}>
                         {p.jabatan}
                       </p>
                     </div>
 
                   </div>
-                </div>
+                </motion.div>
               ))}
             </motion.div>
           )}
@@ -272,22 +273,23 @@ export default function AparaturPage() {
 
       {/* ==================== 4. FOOTER SOLID DENGAN GRADASI TEBAL MATCHING ==================== */}
       <footer style={{ 
-        background: 'linear-gradient(135deg, #a6f7ff 0%, #3e0ba3 45%, #0d021f 100%)', 
+        background: 'linear-gradient(135deg, #00FFA3 0%, #0A3A2F 45%, #031410 100%)', 
         padding: '50px 5% 40px 5%', 
-        borderTop: '4px solid #5409DA',
+        borderTop: '4px solid #00FFA3',
         textAlign: 'center',
         position: 'relative',
-        zIndex: 2
+        zIndex: 2,
+        boxShadow: '0 -15px 40px rgba(10, 58, 47, 0.15)'
       }}>
         <div style={{ maxWidth: '1200px', margin: '0 auto', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '15px' }}>
-          <h3 style={{ margin: '0', color: '#a6f7ff', fontSize: '1.2rem', fontWeight: '900', letterSpacing: '0.5px' }}>
+          <h3 style={{ margin: '0', color: '#ffffff', fontSize: '1.2rem', fontWeight: '900', letterSpacing: '0.5px', textShadow: '0 2px 10px rgba(0,255,163,0.3)' }}>
             PEMERINTAH DESA KLANDERAN
           </h3>
-          <p style={{ margin: '0', fontSize: '0.85rem', color: '#ffffff', fontWeight: '600', opacity: 0.8, maxWidth: '600px', lineHeight: '1.5' }}>
+          <p style={{ margin: '0', fontSize: '0.85rem', color: '#ffffff', fontWeight: '600', opacity: 0.9, maxWidth: '600px', lineHeight: '1.5' }}>
             Sistem Informasi Pelayanan Struktural Pamong & Administrasi Mandiri Terpadu. Kec. Plosoklaten, Kabupaten Kediri, Jawa Timur.
           </p>
-          <div style={{ width: '80px', height: '1px', background: 'rgba(255,255,255,0.2)', margin: '10px 0' }} />
-          <p style={{ margin: '0', fontSize: '0.78rem', color: '#ffffff', fontWeight: '750', opacity: 0.7 }}>
+          <div style={{ width: '80px', height: '1px', background: 'rgba(255,255,255,0.3)', margin: '10px 0' }} />
+          <p style={{ margin: '0', fontSize: '0.78rem', color: '#ffffff', fontWeight: '750', opacity: 0.8 }}>
             {"© 2026 Tim KKN Universitas Negeri Malang. Seluruh Hak Cipta Dilindungi."}
           </p>
         </div>

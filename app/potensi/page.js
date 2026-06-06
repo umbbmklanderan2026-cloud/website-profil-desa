@@ -35,19 +35,19 @@ export default function PotensiPage() {
     mouseY.set(clientY - top)
   }
 
-  // ==================== OPSI 2: SCROLL-LINKED GRADIENT PROGRESS ====================
+  // ==================== OPSI 2: SCROLL-LINKED GRADIENT PROGRESS (TEMA HIJAU) ====================
   const { scrollYProgress } = useScroll()
   
   const glowColorCenter = useTransform(
     scrollYProgress,
     [0, 0.5, 1],
-    ['rgba(187, 251, 255, 0.45)', 'rgba(84, 9, 218, 0.25)', 'rgba(84, 9, 218, 0.45)']
+    ['rgba(0, 255, 163, 0.35)', 'rgba(10, 58, 47, 0.5)', 'rgba(3, 20, 16, 0.6)']
   )
 
   const glowColorOuter = useTransform(
     scrollYProgress,
     [0, 1],
-    ['rgba(84, 9, 218, 0.05)', 'rgba(187, 251, 255, 0.02)']
+    ['rgba(10, 58, 47, 0.15)', 'rgba(230, 251, 247, 0.05)']
   )
 
   const dynamicBackground = useMotionTemplate`
@@ -55,7 +55,7 @@ export default function PotensiPage() {
       650px circle at ${mouseX}px ${mouseY}px,
       ${glowColorCenter} 0%,
       ${glowColorOuter} 45%,
-      rgba(255, 255, 255, 1) 85%
+      rgba(240, 253, 244, 1) 85%
     )
   `
 
@@ -112,7 +112,7 @@ export default function PotensiPage() {
         </div>
         <motion.a 
           href="/" 
-          whileHover={{ scale: 1.05, boxShadow: '0 5px 15px rgba(187,251,255,0.4)' }}
+          whileHover={{ scale: 1.05, boxShadow: '0 5px 15px rgba(0,255,163,0.4)' }}
           whileTap={{ scale: 0.95 }}
           style={{ 
             textDecoration: 'none', 
@@ -133,17 +133,17 @@ export default function PotensiPage() {
 
       {/* ==================== 2. BANNER UTAMA SOLID DEEP GRADIENT ==================== */}
       <div style={{ 
-        background: 'linear-gradient(135deg, #110326 0%, #3e0ba3 50%, #0d021f 100%)', 
+        background: 'linear-gradient(135deg, #05201A 0%, #0A3A2F 50%, #031410 100%)', 
         padding: isMobile ? '120px 20px 60px 20px' : '140px 20px 80px 20px', 
         textAlign: 'center', 
-        borderBottom: '3px solid #5409DA',
+        borderBottom: '3px solid #00FFA3',
         boxShadow: '0 15px 35px rgba(0,0,0,0.15)'
       }}>
         <motion.h1 
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          style={{ color: '#a6f7ff', fontSize: 'clamp(1.8rem, 4vw, 2.8rem)', fontWeight: '900', margin: '0 0 15px 0', textShadow: '0 2px 15px rgba(166,247,255,0.2)' }}
+          style={{ color: '#00FFA3', fontSize: 'clamp(1.8rem, 4vw, 2.8rem)', fontWeight: '900', margin: '0 0 15px 0', textShadow: '0 2px 15px rgba(0,255,163,0.2)' }}
         >
            Sektor Potensi Desa
         </motion.h1>
@@ -175,13 +175,13 @@ export default function PotensiPage() {
           <div 
             onMouseEnter={() => setHoveredCard('tab-panel')}
             onMouseLeave={() => setHoveredCard(null)}
-            style={{ position: 'relative', borderRadius: '28px', padding: '3px', overflow: 'hidden', boxShadow: '0 20px 45px rgba(84, 9, 218, 0.06)' }}
+            style={{ position: 'relative', borderRadius: '28px', padding: '3px', overflow: 'hidden', boxShadow: '0 20px 45px rgba(10, 58, 47, 0.08)' }}
           >
             {/* Lampu sirkuit berjalan di sekeliling panel */}
             <motion.div 
               animate={{ rotate: 360 }}
               transition={{ duration: hoveredCard === 'tab-panel' ? 3 : 12, ease: 'linear', repeat: Infinity }}
-              style={{ position: 'absolute', top: '-100%', left: '-100%', width: '300%', height: '300%', background: 'conic-gradient(from 0deg, #BBFBFF 0%, #5409DA 25%, #BBFBFF 50%, #5409DA 75%, #BBFBFF 100%)', zIndex: 0 }} 
+              style={{ position: 'absolute', top: '-100%', left: '-100%', width: '300%', height: '300%', background: 'conic-gradient(from 0deg, #00FFA3 0%, #0A3A2F 25%, #00FFA3 50%, #0A3A2F 75%, #00FFA3 100%)', zIndex: 0 }} 
             />
 
             <div style={{ position: 'relative', background: 'rgba(255, 255, 255, 0.98)', padding: isMobile ? '20px 15px' : '35px', borderRadius: '25px', zIndex: 1, boxSizing: 'border-box' }}>
@@ -191,11 +191,11 @@ export default function PotensiPage() {
                 display: 'flex', 
                 flexDirection: isMobile ? 'column' : 'row',
                 gap: '10px', 
-                background: 'rgba(84, 9, 218, 0.06)', 
+                background: 'rgba(10, 58, 47, 0.06)', 
                 padding: '8px', 
                 borderRadius: '20px', 
                 marginBottom: '35px',
-                border: '1px solid rgba(84, 9, 218, 0.1)'
+                border: '1px solid rgba(10, 58, 47, 0.1)'
               }}>
                 {['wisata', 'pertanian', 'peternakan'].map((tab) => (
                   <button
@@ -211,9 +211,9 @@ export default function PotensiPage() {
                       textTransform: 'uppercase',
                       letterSpacing: '1px',
                       cursor: 'pointer',
-                      background: activeTab === tab ? '#5409DA' : 'transparent',
-                      color: activeTab === tab ? '#ffffff' : '#5409DA',
-                      boxShadow: activeTab === tab ? '0 8px 20px rgba(84, 9, 218, 0.25)' : 'none',
+                      background: activeTab === tab ? '#0A3A2F' : 'transparent',
+                      color: activeTab === tab ? '#ffffff' : '#0A3A2F',
+                      boxShadow: activeTab === tab ? '0 8px 20px rgba(10, 58, 47, 0.25)' : 'none',
                       transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
                     }}
                   >
@@ -244,12 +244,12 @@ export default function PotensiPage() {
                           animate={{ opacity: 1, scale: 1, y: 0 }} 
                           exit={{ opacity: 0, scale: 0.96, y: -15 }} 
                           transition={{ duration: 0.35, ease: 'easeOut' }}
-                          whileHover={{ y: -6, boxShadow: '0 12px 25px rgba(84, 9, 218, 0.08)' }}
+                          whileHover={{ y: -6, boxShadow: '0 12px 25px rgba(10, 58, 47, 0.1)' }}
                           style={{ 
                             background: '#ffffff', 
                             borderRadius: '20px', 
                             overflow: 'hidden', 
-                            border: '2px solid rgba(187, 251, 255, 0.6)', 
+                            border: '2px solid rgba(0, 255, 163, 0.4)', 
                             boxShadow: '0 4px 15px rgba(0,0,0,0.01)',
                             display: 'flex',
                             flexDirection: 'column',
@@ -257,7 +257,7 @@ export default function PotensiPage() {
                           }}
                         >
                           {/* Bingkai Frame Foto Potensi */}
-                          <div style={{ width: '100%', height: '220px', overflow: 'hidden', borderBottom: '1px solid rgba(84, 9, 218, 0.08)' }}>
+                          <div style={{ width: '100%', height: '220px', overflow: 'hidden', borderBottom: '1px solid rgba(10, 58, 47, 0.08)' }}>
                             <img 
                               src={urlFor(item.foto).url()} 
                               alt={item.namaItem} 
@@ -267,7 +267,7 @@ export default function PotensiPage() {
                           
                           {/* Narasi Penjelasan */}
                           <div style={{ padding: '25px', display: 'flex', flexDirection: 'column', flexGrow: 1 }}>
-                            <h3 style={{ margin: '0 0 10px 0', color: '#1a0640', fontWeight: '900', fontSize: '1.25rem', letterSpacing: '0.3px' }}>
+                            <h3 style={{ margin: '0 0 10px 0', color: '#0a241e', fontWeight: '900', fontSize: '1.25rem', letterSpacing: '0.3px' }}>
                               {item.namaItem}
                             </h3>
                             <p style={{ margin: '0', fontSize: '0.9rem', color: '#4a4a4a', lineHeight: '1.6', textAlign: 'justify', fontWeight: '500' }}>
@@ -289,15 +289,16 @@ export default function PotensiPage() {
 
       {/* ==================== 4. FOOTER SOLID DENGAN GRADASI TEBAL MATCHING ==================== */}
       <footer style={{ 
-        background: 'linear-gradient(135deg, #a6f7ff 0%, #3e0ba3 45%, #0d021f 100%)', 
+        background: 'linear-gradient(135deg, #00FFA3 0%, #0A3A2F 45%, #031410 100%)', 
         padding: '50px 5% 40px 5%', 
-        borderTop: '4px solid #5409DA',
+        borderTop: '4px solid #00FFA3',
         textAlign: 'center',
         position: 'relative',
-        zIndex: 2
+        zIndex: 2,
+        boxShadow: '0 -15px 40px rgba(10, 58, 47, 0.15)'
       }}>
         <div style={{ maxWidth: '1200px', margin: '0 auto', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '15px' }}>
-          <h3 style={{ margin: '0', color: '#a6f7ff', fontSize: '1.2rem', fontWeight: '900', letterSpacing: '0.5px' }}>
+          <h3 style={{ margin: '0', color: '#ffffff', fontSize: '1.2rem', fontWeight: '900', letterSpacing: '0.5px', textShadow: '0 2px 10px rgba(0,255,163,0.3)' }}>
              PEMERINTAH DESA KLANDERAN
           </h3>
           <p style={{ margin: '0', fontSize: '0.85rem', color: '#ffffff', fontWeight: '600', opacity: 0.8, maxWidth: '600px', lineHeight: '1.5' }}>

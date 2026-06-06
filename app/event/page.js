@@ -54,19 +54,19 @@ export default function EventPage() {
     mouseY.set(clientY - top)
   }
 
-  // ==================== OPSI 2: SCROLL-LINKED GRADIENT PROGRESS ====================
+  // ==================== OPSI 2: SCROLL-LINKED GRADIENT PROGRESS (TEMA HIJAU) ====================
   const { scrollYProgress } = useScroll()
   
   const glowColorCenter = useTransform(
     scrollYProgress,
     [0, 0.5, 1],
-    ['rgba(187, 251, 255, 0.45)', 'rgba(84, 9, 218, 0.25)', 'rgba(84, 9, 218, 0.45)']
+    ['rgba(0, 255, 163, 0.35)', 'rgba(10, 58, 47, 0.5)', 'rgba(3, 20, 16, 0.6)']
   )
 
   const glowColorOuter = useTransform(
     scrollYProgress,
     [0, 1],
-    ['rgba(84, 9, 218, 0.05)', 'rgba(187, 251, 255, 0.02)']
+    ['rgba(10, 58, 47, 0.15)', 'rgba(230, 251, 247, 0.05)']
   )
 
   const dynamicBackground = useMotionTemplate`
@@ -74,7 +74,7 @@ export default function EventPage() {
       650px circle at ${mouseX}px ${mouseY}px,
       ${glowColorCenter} 0%,
       ${glowColorOuter} 45%,
-      rgba(255, 255, 255, 1) 85%
+      rgba(240, 253, 244, 1) 85%
     )
   `
 
@@ -132,7 +132,7 @@ export default function EventPage() {
         </div>
         <motion.a 
           href="/" 
-          whileHover={{ scale: 1.05, boxShadow: '0 5px 15px rgba(187,251,255,0.4)' }}
+          whileHover={{ scale: 1.05, boxShadow: '0 5px 15px rgba(0,255,163,0.4)' }}
           whileTap={{ scale: 0.95 }}
           style={{ 
             textDecoration: 'none', 
@@ -153,17 +153,17 @@ export default function EventPage() {
 
       {/* ==================== 2. BANNER UTAMA SOLID DEEP GRADIENT ==================== */}
       <div style={{ 
-        background: 'linear-gradient(135deg, #110326 0%, #3e0ba3 50%, #0d021f 100%)', 
+        background: 'linear-gradient(135deg, #05201A 0%, #0A3A2F 50%, #031410 100%)', 
         padding: isMobile ? '120px 20px 60px 20px' : '140px 20px 80px 20px', 
         textAlign: 'center', 
-        borderBottom: '3px solid #5409DA',
+        borderBottom: '3px solid #00FFA3',
         boxShadow: '0 15px 35px rgba(0,0,0,0.15)'
       }}>
         <motion.h1 
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          style={{ color: '#a6f7ff', fontSize: 'clamp(1.8rem, 4vw, 2.8rem)', fontWeight: '900', margin: '0 0 15px 0', textShadow: '0 2px 15px rgba(166,247,255,0.2)' }}
+          style={{ color: '#00FFA3', fontSize: 'clamp(1.8rem, 4vw, 2.8rem)', fontWeight: '900', margin: '0 0 15px 0', textShadow: '0 2px 15px rgba(0,255,163,0.2)' }}
         >
            Agenda & Kegiatan Desa
         </motion.h1>
@@ -189,10 +189,14 @@ export default function EventPage() {
           transition: 'background 0.1s ease-out'
         }}
       >
+        {/* Dekorasi lingkaran blur halus di latar belakang */}
+        <div style={{ position: 'absolute', top: '10%', left: '-15%', width: '300px', height: '300px', background: 'rgba(0, 255, 163, 0.2)', filter: 'blur(90px)', borderRadius: '50%', zIndex: 0 }} />
+        <div style={{ position: 'absolute', bottom: '15%', right: '-15%', width: '350px', height: '350px', background: 'rgba(10, 58, 47, 0.1)', filter: 'blur(100px)', borderRadius: '50%', zIndex: 0 }} />
+
         <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 5%', boxSizing: 'border-box', position: 'relative', zIndex: 1 }}>
           
           {events.length === 0 ? (
-            <p style={{ color: '#5409DA', fontStyle: 'italic', textAlign: 'center', marginTop: '40px', fontWeight: '700' }}>
+            <p style={{ color: '#0A3A2F', fontStyle: 'italic', textAlign: 'center', marginTop: '40px', fontWeight: '700' }}>
               Sedang mengambil jadwal kalender event dari Sanity...
             </p>
           ) : (
@@ -209,17 +213,18 @@ export default function EventPage() {
             >
               {events.map((event) => (
                 /* BINGKAI INTERAKTIF 3PX: PUTARAN LAMPU MEMUTAR CEPAT SAAT HOVER CARD */
-                <div 
+                <motion.div 
                   key={event._id}
+                  variants={cardVariants}
                   onMouseEnter={() => setHoveredCard(event._id)}
                   onMouseLeave={() => setHoveredCard(null)}
-                  style={{ position: 'relative', borderRadius: '28px', padding: '3px', overflow: 'hidden', boxShadow: '0 15px 35px rgba(84, 9, 218, 0.04)' }}
+                  style={{ position: 'relative', borderRadius: '28px', padding: '3px', overflow: 'hidden', boxShadow: '0 15px 35px rgba(10, 58, 47, 0.08)' }}
                 >
                   {/* Kilatan neon berjalan di sekeliling border */}
                   <motion.div 
                     animate={{ rotate: 360 }} 
                     transition={{ duration: hoveredCard === event._id ? 3 : 12, ease: 'linear', repeat: Infinity }} 
-                    style={{ position: 'absolute', top: '-100%', left: '-100%', width: '300%', height: '300%', background: 'conic-gradient(from 0deg, #BBFBFF, #5409DA, #BBFBFF, #5409DA, #BBFBFF)', zIndex: 0 }} 
+                    style={{ position: 'absolute', top: '-100%', left: '-100%', width: '300%', height: '300%', background: 'conic-gradient(from 0deg, #00FFA3, #0A3A2F, #00FFA3, #0A3A2F, #00FFA3)', zIndex: 0 }} 
                   />
 
                   {/* KONTEN UTAMA DI DALAM KARTU */}
@@ -227,7 +232,7 @@ export default function EventPage() {
                     
                     {/* Pembungkus Pamflet Banner Eksklusif */}
                     {event.pamflet && (
-                      <div style={{ width: '100%', height: '210px', borderRadius: '18px', overflow: 'hidden', marginBottom: '18px', border: '1px solid rgba(84, 9, 218, 0.08)', boxShadow: '0 5px 15px rgba(0,0,0,0.03)' }}>
+                      <div style={{ width: '100%', height: '210px', borderRadius: '18px', overflow: 'hidden', marginBottom: '18px', border: '1px solid rgba(10, 58, 47, 0.15)', boxShadow: '0 5px 15px rgba(0,0,0,0.03)' }}>
                         <img 
                           src={urlFor(event.pamflet).url()} 
                           alt={event.judulEvent} 
@@ -237,13 +242,13 @@ export default function EventPage() {
                     )}
 
                     {/* Judul Event */}
-                    <h3 style={{ margin: '0 0 12px 0', color: '#1a0640', fontWeight: '900', fontSize: '1.25rem', lineHeight: '1.4' }}>
+                    <h3 style={{ margin: '0 0 12px 0', color: '#0a241e', fontWeight: '900', fontSize: '1.25rem', lineHeight: '1.4' }}>
                       {event.judulEvent}
                     </h3>
                     
                     {/* Detail Metatags (Lokasi & Waktu) */}
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', marginBottom: '15px' }}>
-                      <p style={{ fontSize: '0.92rem', color: '#5409DA', fontWeight: '800', margin: '0', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                      <p style={{ fontSize: '0.92rem', color: '#0A3A2F', fontWeight: '800', margin: '0', display: 'flex', alignItems: 'center', gap: '6px' }}>
                         <span>📍</span> {event.lokasi}
                       </p>
                       <p style={{ fontSize: '0.85rem', color: '#666666', fontWeight: '600', margin: '0', display: 'flex', alignItems: 'center', gap: '6px' }}>
@@ -258,7 +263,7 @@ export default function EventPage() {
                         color: '#4a4a4a', 
                         lineHeight: '1.6', 
                         marginTop: 'auto', 
-                        borderTop: '2px dashed rgba(84, 9, 218, 0.12)', 
+                        borderTop: '2px dashed rgba(10, 58, 47, 0.15)', 
                         paddingTop: '14px', 
                         marginBottom: '0', 
                         textAlign: 'justify',
@@ -269,7 +274,7 @@ export default function EventPage() {
                     )}
 
                   </div>
-                </div>
+                </motion.div>
               ))}
             </motion.div>
           )}
@@ -278,22 +283,23 @@ export default function EventPage() {
 
       {/* ==================== 4. FOOTER SOLID DENGAN GRADASI TEBAL MATCHING ==================== */}
       <footer style={{ 
-        background: 'linear-gradient(135deg, #a6f7ff 0%, #3e0ba3 45%, #0d021f 100%)', 
+        background: 'linear-gradient(135deg, #00FFA3 0%, #0A3A2F 45%, #031410 100%)', 
         padding: '50px 5% 40px 5%', 
-        borderTop: '4px solid #5409DA',
+        borderTop: '4px solid #00FFA3',
         textAlign: 'center',
         position: 'relative',
-        zIndex: 2
+        zIndex: 2,
+        boxShadow: '0 -15px 40px rgba(10, 58, 47, 0.15)'
       }}>
         <div style={{ maxWidth: '1200px', margin: '0 auto', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '15px' }}>
-          <h3 style={{ margin: '0', color: '#a6f7ff', fontSize: '1.2rem', fontWeight: '900', letterSpacing: '0.5px' }}>
+          <h3 style={{ margin: '0', color: '#ffffff', fontSize: '1.2rem', fontWeight: '900', letterSpacing: '0.5px', textShadow: '0 2px 10px rgba(0,255,163,0.3)' }}>
              PEMERINTAH DESA KLANDERAN
           </h3>
-          <p style={{ margin: '0', fontSize: '0.85rem', color: '#ffffff', fontWeight: '600', opacity: 0.8, maxWidth: '600px', lineHeight: '1.5' }}>
+          <p style={{ margin: '0', fontSize: '0.85rem', color: '#ffffff', fontWeight: '600', opacity: 0.9, maxWidth: '600px', lineHeight: '1.5' }}>
             Sistem Informasi Pelayanan Publik Publikasi Event, Maklumat Kegiatan, & Agenda Kebudayaan Tradisional Warga. Kec. Plosoklaten, Kabupaten Kediri, Jawa Timur.
           </p>
-          <div style={{ width: '80px', height: '1px', background: 'rgba(255,255,255,0.2)', margin: '10px 0' }} />
-          <p style={{ margin: '0', fontSize: '0.78rem', color: '#ffffff', fontWeight: '750', opacity: 0.7 }}>
+          <div style={{ width: '80px', height: '1px', background: 'rgba(255,255,255,0.3)', margin: '10px 0' }} />
+          <p style={{ margin: '0', fontSize: '0.78rem', color: '#ffffff', fontWeight: '750', opacity: 0.8 }}>
             {"© 2026 Tim KKN Universitas Negeri Malang. Seluruh Hak Cipta Dilindungi."}
           </p>
         </div>
